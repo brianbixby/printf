@@ -1,0 +1,126 @@
+TO DO:
+  lltoa returns string
+  precision and with for all numbers
+
+
+sSpdDioOuUxXcC
+◦ write
+◦ setlocale
+◦ malloc
+◦ free
+◦ exit
+
+SDOUXC
+You must manage the flags #0-+ and space
+  
+You must manage the minimum field-width
+You must manage the precision
+• You must manage the flags hh, h, l, ll, j, et z.
+
+You must manage the flags #0-+ and space
+  flags:
+    -   : left justify;
+      ex. printf("%-5d", 123);
+    0   : field is padded wtih 0's instead of blanks;
+      ex. printf(" %05d%s \n", 123, "hi");
+    +   : prepends numbers with a plus or negative sign
+      ex. printf(" %+5d%s \n", -123, "hi");
+    #   : For o, x, X types, the text 0, 0x, 0X, respectively, is prepended to non-zero numbers
+      ex. printf("%#x%s \n", 'c', "hi");
+    ' ' : Prepends a space for positive signed-numeric types. positive =  , negative = -. This flag is ignored if the + flag exists. (The default doesn't prepend anything in front of positive numbers.)
+      ex. printf(" % 5d%s \n", 123, "hi");
+
+You must manage the minimum field-width
+  specifies min # of charachters to output
+    asterisk means the value is another argument
+      ex. printf("%5d", 123);
+      ex. printf("%*d", 5, 123);
+  
+precision
+  specifies a maximum limit on the output
+    asterisk means the value is another argument
+      ex. printf("%.*s", 3, "abcdef")
+      ex. printf("%.3s", "abcdef")
+
+flags
+  hh	For integer types, causes printf to expect an int-sized integer argument which was promoted from a char.
+  h	For integer types, causes printf to expect an int-sized integer argument which was promoted from a short.
+  l	For integer types, causes printf to expect a long-sized integer argument.
+  For floating point types, this has no effect.[3]
+
+  ll	For integer types, causes printf to expect a long long-sized integer argument.
+  L	For floating point types, causes printf to expect a long double argument.
+  z	For integer types, causes printf to expect a size_t-sized integer argument.
+
+  % -> flags (#,0,-,+,' ') -> min-width (any # (ex. 12) || *) -> precision (.,*) -> length field (hh, h, l, ll, j, z) -> type field -> (sSpdDioOuUxXcC)
+
+  look for %
+
+data type
+typedef struct		s_print
+{
+  int             flag[5];
+  int             minw;
+  int             prec;
+  int             len;
+}					        t_print;
+
+FLAGS:
+  '-' : left-align always
+  '+' : prepends '+' or '-'
+          CHECK: only for signed ints 
+  ' ' : prepends ' ' or '-' 
+          CHECK: only for signed ints
+          IGNORED: when flag '+' is present
+  '0' : fills width with 0's 
+          CHECK: width option, prepended vals before 0's
+          IGNORED: when flag '-' is present
+  '#' : For o, x, X types, the text 0, 0x, 0X, respectively, is prepended to non-zero numbers.
+          CHECK: o, x, X type field and val is not zero
+
+-, 0, +, #, ' '
+
+MIN-WIDTH:
+  specifies min # of charachters to output
+    asterisk means the value is another argument
+      ex. printf("%5d", 123);
+      ex. printf("%*d", 5, 123);
+    CHECK: prepended values before spaces 
+
+PRECISION:
+  specifies a maximum limit on the output
+    asterisk means the value is another argument
+      ex. printf("%.*s", 3, "abcdef")
+      ex. printf("%.3s", "abcdef")
+
+LENGTH: MODIFIERS
+  hh : Speciﬁes that a following d, i, o, u, x, or X conversion speciﬁer applies to a short int or unsigned short int argument
+  h
+  l formats long
+  ll long long
+  j Speciﬁes that a following d, i, o, u, x, X, or n conversion specifier applies to an argument with type pointer to intmax_t or uintmax_t
+  z size_t
+
+  
+
+TYPE FIELDS:
+  S : unicode string - DONE
+  D : unsigned int -DONE
+  O : same as lower case o -DONE
+  U : unsigned int - DONE
+  X : hex in uppercase letters DONE
+  C : unicode char - DONE
+
+unicode char C lc , S ls
+
+intmax_t -> 
+
+s -> print_s
+c -> print_c
+p -> atoi -> prints
+
+di -> atoi -> print_i
+u -> atoi -> print_u
+oxx -> atoi -> print_u
+f -> atoif ->  printf
+% -> prints ->
