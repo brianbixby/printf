@@ -132,6 +132,7 @@ f - double
   min-width: is the total width, if width is smaller than min width, its filled with empty spaces
   precision: ignore
 
+
 TO DO:
   lltoa returns string
   precision and with for all numbers
@@ -258,3 +259,59 @@ u -> atoi -> print_u
 oxx -> atoi -> print_u
 f -> atoif ->  printf
 % -> prints ->
+
+
+//if ((print->prec == -1 || print->prec <= len_with_no_sign) && (!print->flag[1] || print->flag[0]))
+
+// make neg 1 for true
+// make prepend 1 for true
+// len_with_no_sign
+void        ft_print_signed(char *s, int *lenptr, t_print *print)
+{
+  int pidx;
+  int sidx;
+
+  pidx = -1;
+  sidx = -1;
+  if (print->flag[0])
+  {
+    if (neg)
+      ptr[++pidx] = '-';
+    else if (print->flag[2] || print->flag[4])
+      ptr[++pidx] = (print->flag[2] ? '+' : ' ');
+    while (--print->prec - len_with_no_sign >= 0)
+      ptr[++pidx] = '0';
+    while (s[++sidx])
+      ptr[++pidx] = s[sidx];
+    while (++pidx < size)
+      ptr[pidx] = ' ';
+  }
+  else
+  {
+    if (print->flag[1] && print->prec == -1)
+    {
+      if (neg)
+        ptr[++pidx] = '-';
+      else if (print->flag[2] || print->flag[4])
+        ptr[++pidx] = (print->flag[2] ? '+' : ' ');
+      while (pidx + len_with_no_sign + 1 < size)
+        ptr[++pidx] = '0';
+      while (s[++sidx])
+          ptr[++pidx] = s[sidx];
+    }
+    else if (print->prec > len_with_no_sign)
+    {
+      while (++pidx + print->prepend + print->prec < size)
+        ptr[pidx] = ' ';
+      if (print->prepend)
+        ptr[pidx] = print->prepend;
+      while (++pidx + len_with_no_sign < size)
+        ptr[pidx] = '0';
+      while (++pidx < size)
+        ptr[pidx] = s[++sidx];
+    }
+    else
+    {
+      
+    }
+  }

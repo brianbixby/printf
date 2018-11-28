@@ -41,7 +41,9 @@ void        ft_print_unsigned(char *s, int *lenptr, t_print *print)
 	else
 	{
 		while (++i < size - charstoprint)
-			str[i] = ' ';
+			str[i] = (print->flag[1] ? '0' : ' ');
+		while (i + print->len_with_no_sign < size)
+        	str[i++] = '0';
 		while (i < size)
 		{
 			str[i] = s[j];

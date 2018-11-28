@@ -13,7 +13,9 @@
 #include "ft_printf.h"
 #define BASE(c) ((c == 'x' || c == 'X') ? (16) : (8))
 #define ABS(i)  ((i < 0) ? (-i) : (i))
-
+#define FT_ULLMAX (~(0ULL))
+#define FT_LLMAX ((long long)(FT_ULLMAX / 2))
+#define FT_LLMIN (~FT_LLMAX)
 char	*ft_lltoa_base(long long value, int base, t_print *print)
 {
 	// printf("%s %lld \n", "lltoa val: ", value);
@@ -21,30 +23,49 @@ char	*ft_lltoa_base(long long value, int base, t_print *print)
 	char            *tab;
 	long long   	tmp;
 	char			*str;
+	char			*min;
 
 	size = 1;
 	tab = (print->type == 'X' ? ("0123456789ABCDEF") : ("0123456789abcdef"));
+	min = "9223372036854775808";
 	if (base < 2 || base > 16)
 		return (NULL);
 	tmp = value;
 	while (tmp /= base)
 		size++;
-	tmp = (value < 0 ? (1) : (0));
-	if (!(str = (char *)malloc(sizeof(char) * (size + tmp + 1))))
+	if (value < 0)
+	{
+		print->neg = 1;
+		print->prepend_val = "-";
+		print->prepend = 1;
+	}
+	// tmp = (value < 0 ? (1) : (0));
+	// if (!(str = (char *)malloc(sizeof(char) * (size + tmp + 1))))
+	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
 	str[size] = '\0';
-	while (size-- > tmp)
+	// while (size-- > tmp)
+	if (value == FT_LLMIN)
+	{
+		print->len_with_no_sign = 19;
+		size = -1;
+		while (++size < 19)
+			str[size] = min[size];
+		return (str);
+	}
+	while (size-- > 0)
 	{
 		str[size] = tab[ABS(value % base)];
 		value /= base;
 	}
-	if (tmp)
-		str[0] = '-';
+	// if (tmp)
+	// 	str[0] = '-';
 	// ft_printstr(str, lenptr, print);
 
 	// ft_print_signed(str, lenptr, print);
 
 	// ft_print_s(str, lenptr, print);
+	print->len_with_no_sign = ft_strlen(str);
 	return (str);
 }
 
@@ -66,6 +87,19 @@ char	*ft_ulltoa_base(unsigned long long value, int base, t_print *print)
 	if (!(str = (char *)malloc(sizeof(char) * (size + tmp + 1))))
 		return (NULL);
 	str[size] = '\0';
+	if (print->flag[3] && (print->type == 'o' || print->type == 'x' || print->type == 'X') && value != 0)
+	{
+		if (print->type == 'o')
+		{
+			print->prepend_val = "0";
+			print->prepend = 1;
+		}
+		else
+		{
+			print->prepend_val = (print->type == 'x' ? "0x" : "0X");
+			print->prepend = 2;
+		}
+	}
 	while (size-- > tmp)
 	{
 		str[size] = tab[ABS(value % base)];
@@ -77,6 +111,7 @@ char	*ft_ulltoa_base(unsigned long long value, int base, t_print *print)
 
 	// ft_print_s(str, lenptr, print);
 	// printf("%s %s", "ultoabase str: ", str);
+	print->len_with_no_sign = ft_strlen(str);
 	return (str);
 }
 
@@ -145,6 +180,11 @@ void	ft_initializeprintstruct(t_print *print)
 	print->minw = 0;
 	print->prec = -1;
 	print->len = 0;
+	print->type = 0;
+	print->len_with_no_sign = 0;
+	print->neg = 0;
+	print->prepend = 0;
+	print->prepend_val = 0;
 }
 
 const char		*ft_setflags(const char *s, va_list ap, int *lenptr)
@@ -158,82 +198,90 @@ const char		*ft_setflags(const char *s, va_list ap, int *lenptr)
 	ft_initializeprintstruct(&print);
 	while (s[++idx])
 	{
-		if (s[idx] == '-')
-			print.flag[0] = 1;
-		else if (s[idx] == '0')
-			print.flag[1] = 1;
-		else if (s[idx] == '+')
-			print.flag[2] = 1;
-		else if (s[idx] == '#')
-			print.flag[3] = 1;
-		else if (s[idx] == ' ')
-			print.flag[4] = 1;
-		else
+		while (s[idx] == '-' || s[idx] == '0'  || s[idx] == '+' || s[idx] == '#' || s[idx] == ' ')
 		{
+			if (s[idx] == '-')
+				print.flag[0] = 1;
+			else if (s[idx] == '0')
+				print.flag[1] = 1;
+			else if (s[idx] == '+')
+				print.flag[2] = 1;
+			else if (s[idx] == '#')
+				print.flag[3] = 1;
+			else if (s[idx] == ' ')
+				print.flag[4] = 1;
+			idx++;
+		}
+		if (print.flag[2] || print.flag[4])
+		{
+			print.prepend_val = (print.flag[2] ? "+" : " ");
+			print.prepend = 1;
+		}
+		if (s[idx] == '*')
+		{
+			print.minw = va_arg(ap, int);
+			// printf("%s %d \n", "minw: ", print.minw);
+			idx++;
+		}
+		else if (s[idx] >= '0' && s[idx] <= '9')
+		{
+			print.minw = ft_atoi(&s[idx]);
+			while (s[idx] >= '0' && s[idx] <= '9')
+				idx++;
+		}
+		if (s[idx] == '.')
+		{
+			idx++;
 			if (s[idx] == '*')
 			{
-				print.minw = va_arg(ap, int);
-				// printf("%s %d \n", "minw: ", print.minw);
+				print.prec = va_arg(ap, int);
+
 				idx++;
 			}
 			else if (s[idx] >= '0' && s[idx] <= '9')
 			{
-				print.minw = ft_atoi(&s[idx]);
+				print.prec = ft_atoi(&s[idx]);
 				while (s[idx] >= '0' && s[idx] <= '9')
 					idx++;
 			}
-			if (s[idx] == '.')
-			{
-				idx++;
-				if (s[idx] == '*')
-				{
-					print.prec = va_arg(ap, int);
-
-					idx++;
-				}
-				else if (s[idx] >= '0' && s[idx] <= '9')
-				{
-					print.prec = ft_atoi(&s[idx]);
-					while (s[idx] >= '0' && s[idx] <= '9')
-						idx++;
-				}
-			}
-			if (s[idx] == 'h' && (s[idx +1] && s[idx + 1] == 'h'))
-			{
-				print.len = 1;
-				idx += 2;
-			}
-			else if (s[idx] == 'h')
-			{
-				print.len = 2;
-				idx++;
-			}
-			else if (s[idx] == 'l' && (s[idx +1] && s[idx + 1] == 'l'))
-			{
-				print.len = 3;
-				idx += 2;
-			}
-			else if (s[idx] == 'l')
-			{
-				print.len = 4;
-				idx++;
-			}
-			else if (s[idx] == 'j')
-			{
-				print.len = 5;
-				idx++;
-			}
-			else if (s[idx] == 'z')
-			{
-				print.len = 6;
-				idx++;
-			}
-			print.type = s[idx];
-			// printf("%s %d%d%d%d%d %s %d %s %d %s %d %s %c \n", "flag[0]-[4]: ", print.flag[0],print.flag[1],print.flag[2],print.flag[3],print.flag[4], "minw: ", print.minw, "prec: ", print.prec, "len: ", print.len, "type: ", print.type);
-			ft_format(ap, &print, lenptr);
-			// printf("%s %s \n", "end ft_setflags: ", &s[idx]);
-			return (&s[idx + 1]);
+			else
+				print.prec = 0;
 		}
+		if (s[idx] == 'h' && (s[idx +1] && s[idx + 1] == 'h'))
+		{
+			print.len = 1;
+			idx += 2;
+		}
+		else if (s[idx] == 'h')
+		{
+			print.len = 2;
+			idx++;
+		}
+		else if (s[idx] == 'l' && (s[idx +1] && s[idx + 1] == 'l'))
+		{
+			print.len = 3;
+			idx += 2;
+		}
+		else if (s[idx] == 'l')
+		{
+			print.len = 4;
+			idx++;
+		}
+		else if (s[idx] == 'j')
+		{
+			print.len = 5;
+			idx++;
+		}
+		else if (s[idx] == 'z')
+		{
+			print.len = 6;
+			idx++;
+		}
+		print.type = s[idx];
+		// printf("%s %d%d%d%d%d %s %d %s %d %s %d %s %c \n", "flag[0]-[4]: ", print.flag[0],print.flag[1],print.flag[2],print.flag[3],print.flag[4], "minw: ", print.minw, "prec: ", print.prec, "len: ", print.len, "type: ", print.type);
+		ft_format(ap, &print, lenptr);
+		// printf("%s %s \n", "end ft_setflags: ", &s[idx]);
+		return (&s[idx + 1]);
 	}
 	printf("shold not have hit this\n");
 	return (&s[idx]);
@@ -245,10 +293,10 @@ long long   ft_int_modifier(va_list ap, t_print *print)
 	long long	ret;
 
 	ret = 0;
-	if (print->len == 1 || print->len == 2)
-		ret = va_arg(ap, int);
-	// else if (print->len == 2)
-	// 	ret = va_arg(ap, short);
+	if (print->len == 1)
+		ret = (char)va_arg(ap, int);
+	else if (print->len == 2)
+		ret = (short)va_arg(ap, int);
 	else if (print->len == 3)
 		ret = va_arg(ap, long long);
 	else if (print->len == 4)
@@ -268,10 +316,10 @@ unsigned long long   ft_uint_modifier(va_list ap, t_print *print)
 	unsigned long long	ret;
 
 	ret = 0;
-	if (print->len == 1 || print->len == 2)
-		ret = va_arg(ap, unsigned int);
-	// else if (print->len == 2)
-	// 	ret = va_arg(ap, unsigned short);
+	if (print->len == 1)
+		ret = (unsigned char)va_arg(ap, unsigned int);
+	else if (print->len == 2)
+		ret = (unsigned short)va_arg(ap, unsigned int);
 	else if (print->len == 3)
 		ret = va_arg(ap, unsigned long long);
 	else if (print->len == 4)

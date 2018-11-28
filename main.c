@@ -19,16 +19,35 @@ int     main(void)
     // printf("%.0%");
     // ft_printf("%.0%");
     // ft_printf("%#x", 42);
+
     //  printf(" %05d%s \n", 123, "hi");
+    // ft_printf(" %05d%s \n", 123, "hi");
+
     //  printf(" %+5d%s \n", -123, "hi");
+    //  ft_printf(" %+5d%s \n", -123, "hi");
+     
     //  printf(" % 5d%s \n", 123, "hi");
+    //  ft_printf(" % 5d%s \n", 123, "hi");
+
     //  printf("%#x%s \n", 'c', "hi");
-    // printf("%+#x%s \n", 'c', "hi");
+    //  ft_printf("%#x%s \n", 'c', "hi");
+
+    // #define FT_ULLMAX (~(0ULL))
+    // #define FT_LLMAX (FT_ULLMAX / 2)
+    // #define FT_LLMIN (~FT_LLMAX)
+    printf("@moulitest: %#.x %#.0x", 0, 0);
+    ft_printf("@moulitest: %#.x %#.0x", 0, 0);
+    
+
     //  printf(" %0 5d%s \n", 123, "hi");
+    //  ft_printf(" %0 5d%s \n", 123, "hi");
+
     //  printf("%5d\n", 123);
+    //  ft_printf("%5d\n", 123);
     //  printf("%.*s\n", 3, "abcdef");
 
     // printf("%+010d\n", -123);
+    // ft_printf("%+010d\n", -123);
     // printf("%ld\n", j);
 	// printf("% 0 0-5d\n", 12);
 	// printf("ft_printf\n");
@@ -44,7 +63,54 @@ int     main(void)
     // printf("@moulitest: %.o %.0o \n", 0, 0);
     // printf("@moulitest: %5.o %5.0o \n", 0, 0);
     // printf("%-10.5d", 2500);
-    // printf("%-10.5d", 2500);
-    ft_printf("%5% \n");
+    // printf("%-10.5d\n", 2500);
+    // ft_printf("%-10.5d\n", 2500);
+    // ft_printf("%5% \n");
+
+    // printf("%.4d \n", -234);
+    // ft_printf("%.4d \n", -234);
+
+    // printf("%+.4d \n", -234);
+    // ft_printf("%+.4d \n", -234);
+
+    // printf("%6d \n", 234);
+    // ft_printf("%6d \n", 234);
+
+    // printf("%+6d \n", 234);
+    // ft_printf("%+6d \n", 234);
+
+    // printf("%06d \n", 234);
+    // ft_printf("%06d \n", 234);
+
+    // printf("%+06d \n", 234);
+    // ft_printf("%+06d \n", 234);
+
+    // printf("%.6d \n", 234);
+    // ft_printf("%.6d \n", 234);
+
+    // printf("%+.6d \n", 234);
+    // ft_printf("%+.6d \n", 234);
+
+
+    // printf("%6d \n", -234);
+    // ft_printf("%6d \n", -234);
+
+    // printf("%+6d \n", -234);
+    // ft_printf("%+6d \n", -234);
+
+
+    // printf("%06d \n", -234);
+    // ft_printf("%06d \n", -234);
+
+    // printf("%+06d \n", -234);
+    // ft_printf("%+06d \n", -234);
+
+
+    // printf("%.6d \n", -234);
+    // ft_printf("%.6d \n", -234);
+
+    // printf("%+.6d \n", -234);
+    // ft_printf("%+.6d \n", -234);
+
     return (0);
 }

@@ -25,6 +25,10 @@ typedef struct		s_print
 	int				prec;
 	int				len;
 	char			type;
+	int				len_with_no_sign;
+	int				neg;
+	int				prepend;
+	char			*prepend_val;
 }					t_print;
 
 char        *ft_lltoa_base(long long value, int base, t_print *print);
@@ -46,6 +50,7 @@ void				ft_printstr(char *s, int *lenptr);
 // ft_helpers.c
 int					ft_atoi(const char *str);
 int					ft_strlen(char *s);
+int					ft_strcmp(char *s1, char *s2);
 
 // ft_wchar.c
 size_t  ft_wcharlen(wchar_t w);
