@@ -128,8 +128,10 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend = 2;
 		ft_print_p(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
 	}
-	else if (print->type == 'd' || print->type == 'D' || print->type == 'i')
+	else if (print->type == 'd' || print->type == 'i')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
+	else if (print->type == 'D')
+		ft_print_signed(ft_lltoa_base((long)va_arg(ap, long), 10, print), lenptr, print);
 	else if (print->type == 'u' || print->type == 'U')
 	{
 		print->flag[2] = 0;
@@ -307,10 +309,10 @@ long long   ft_int_modifier(va_list ap, t_print *print)
 		ret = (signed char)va_arg(ap, int);
 	else if (print->len == 2)
 		ret = (short)va_arg(ap, int);
-	else if (print->len == 3 || print->len == 4)
+	else if (print->len == 3)
 		ret = (long long)va_arg(ap, long long);
-	// else if (print->len == 4)
-	// 	ret = (long)va_arg(ap, long);
+	else if (print->len == 4)
+		ret = (long)va_arg(ap, long);
 	else if (print->len == 5)
 		ret = (long long)va_arg(ap, long long);
 	else if (print->len == 6)
