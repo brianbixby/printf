@@ -117,10 +117,10 @@ char	*ft_ulltoa_base(unsigned long long value, int base, t_print *print)
 
 void		ft_format(va_list ap, t_print *print, int *lenptr)
 {
-	if (print->type == 's' || print->type == 'S')
+	if (print->type == 's')
 		ft_print_s(va_arg(ap, char *), lenptr, print);
-	else if (print->type == 'c' || print->type == '%' || print->type == 'C')
-		print->type == 'c' || print->type == 'C' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
+	else if (print->type == 'c' || print->type == '%')
+		print->type == 'c' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
 			(ft_print_s("%", lenptr, print));
 	else if (print->type == 'p')
 	{
@@ -138,7 +138,10 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		// ft_lltoa_base(j, BASE(print->type), lenptr, print);
 		ft_print_signed(ft_ulltoa_base(ft_uint_modifier(ap, print),  BASE(print->type), print), lenptr, print);
 	}
-	// else if (print->type == 'f') 
+	else if (print->type == 'C')
+		ft_print_s(va_arg(ap, wchar_t), lenptr, print);
+	else if (print->type == 'S')
+		ft_print_s(va_arg(ap, wchar_t *), lenptr, print);
 }
 
 int         ft_printf(const char *s, ...)
