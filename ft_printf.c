@@ -129,7 +129,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 	}
 	else if (print->type == 'd' || print->type == 'i' || print->type == 'D')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
-	else if (print->type == 'u')
+	else if (print->type == 'u' || print->type == 'U')
 		ft_print_unsigned(ft_ulltoa_base(ft_uint_modifier(ap, print), 10, print), lenptr, print);
 	else if (print->type == 'o' || print->type == 'x' || print->type == 'X')
 	{
