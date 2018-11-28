@@ -32,7 +32,7 @@ void        ft_print_c(char c, int *lenptr, t_print *print)
     else
     {
         while (idx < size - 1)
-            ptr[idx++] = ' ';
+            ptr[idx++] = (print->flag[1] ? '0' : ' ');
         ptr[idx] = c;
     }
     write(1, ptr, size);

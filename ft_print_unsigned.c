@@ -22,13 +22,20 @@ void        ft_print_unsigned(char *s, int *lenptr, t_print *print)
 
 	j = 0;
 	i = ft_strlen(s);
-	charstoprint = (print->prec == -1 ? i : print->prec);
+	charstoprint = (print->prec == -1 || i > print->prec ? i : print->prec);
 	size = (print->minw > charstoprint ? print->minw : charstoprint);
+	if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
+		size = print->minw;
 	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
 		return ;
 	str[size] = '\0';
 	i = -1;
-	if (print->flag[0])
+	if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
+	{
+		while (++i < size)
+      		str[i] = ' ';
+	}
+	else if (print->flag[0])
 	{
 		while (++i < charstoprint)
 			str[i] = s[i];

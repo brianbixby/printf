@@ -22,14 +22,14 @@ void        ft_print_signed(char *s, int *lenptr, t_print *print)
   size = (print->len_with_no_sign + print->prepend > print->minw ? print->len_with_no_sign + print->prepend : print->minw);
   if (print->prec + print->prepend > size)
     size = print->prec + print->prepend;
-  if (print->prec == 0 && ft_strcmp(s, "0") == 0)
+  if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
     size = print->minw;
   if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
       return ;
   ptr[size] = '\0';
   pidx = -1;
   sidx = -1;
-  if (print->prec == 0 && ft_strcmp(s, "0") == 0)
+  	if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
   {
     while (++pidx < size)
       ptr[pidx] = ' ';

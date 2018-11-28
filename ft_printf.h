@@ -69,4 +69,8 @@ void        ft_print_unsigned(char *s, int *lenptr, t_print *print);
 
 // ft_print_signed.c
 void        ft_print_signed(char *s, int *lenptr, t_print *print);
+
+// ft_print_p.c
+void        ft_print_p(char *s, int *lenptr, t_print *print);
+
 #endif

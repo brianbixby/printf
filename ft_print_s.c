@@ -19,20 +19,28 @@ void        ft_print_s(char *s, int *lenptr, t_print *print)
     char    *ptr;
     int     idx;
 
-    if (!s)
+    if (!s && print->minw == 0)
 	{
 		write(1, "(null)", 6);
 		*lenptr += 6;
 		return ;
 	}
-    len = (print->prec == -1 || print->type == '%' || ft_strlen(s) < print->prec ? ft_strlen(s) : print->prec);
+    
+
+    len = (!s ? 0 : ft_strlen(s));
+    len = (print->prec == -1 || print->type == '%' || len < print->prec ? len : print->prec);
     // len = ((print->prec != -1 || print->type != '%') && print->prec < ft_strlen(s) ? print->prec : ft_strlen(s));
     size = (len > print->minw ? len : print->minw);
     if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
         return ;
     ptr[size] = '\0';
     idx = -1;
-    if (print->flag[0])
+    if (!s)
+    {
+        while (++idx < size)
+            ptr[idx] = (print->flag[1] ? '0' : ' ');
+    }
+    else if (print->flag[0])
     {
         while (++idx < len && s[idx])
             ptr[idx] = s[idx];
@@ -42,7 +50,7 @@ void        ft_print_s(char *s, int *lenptr, t_print *print)
     else
     {
         while (++idx < size - len)
-            ptr[idx] = ' ';
+            ptr[idx] = (print->flag[1] ? '0' : ' ');
         while (*s && idx < size)
             ptr[idx++] = *s++;
     }

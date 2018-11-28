@@ -124,24 +124,31 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 			(ft_print_s("%", lenptr, print));
 	else if (print->type == 'p')
 	{
-		ft_printstr("0x", lenptr);
-		ft_print_s(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
+		print->prepend_val = "0x";
+		print->prepend = 2;
+		ft_print_p(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
 	}
-	else if (print->type == 'd' || print->type == 'i' || print->type == 'D')
+	else if (print->type == 'd' || print->type == 'i')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
-	else if (print->type == 'u' || print->type == 'U')
+	else if (print->type == 'u')
+	{
+		print->flag[2] = 0;
+		print->flag[4] = 0;
+		print->prepend = 0;
+		print->prepend_val = 0;
 		ft_print_unsigned(ft_ulltoa_base(ft_uint_modifier(ap, print), 10, print), lenptr, print);
+	}
 	else if (print->type == 'o' || print->type == 'x' || print->type == 'X')
 	{
-		// j = ft_uint_modifier(ap, print);
-		// printf("%s %lld \n", "j: ", j);
-		// ft_lltoa_base(j, BASE(print->type), lenptr, print);
+		print->flag[2] = 0;
+		print->flag[4] = 0;
+		print->prepend = 0;
+		print->prepend_val = 0;
 		ft_print_signed(ft_ulltoa_base(ft_uint_modifier(ap, print),  BASE(print->type), print), lenptr, print);
 	}
-	else if (print->type == 'C')
-		ft_print_s(ft_convertwchar(va_arg(ap, wchar_t)), lenptr, print);
-	else if (print->type == 'S')
-		ft_print_s(ft_convertwstr(va_arg(ap, wchar_t *)), lenptr, print);
+	// else if (print->type == 'f')
+	else
+		ft_print_c((int)print->type, lenptr, print);
 }
 
 int         ft_printf(const char *s, ...)
@@ -201,7 +208,7 @@ const char		*ft_setflags(const char *s, va_list ap, int *lenptr)
 	ft_initializeprintstruct(&print);
 	while (s[++idx])
 	{
-		while (s[idx] == '-' || s[idx] == '0'  || s[idx] == '+' || s[idx] == '#' || s[idx] == ' ')
+		while (s[idx] && (s[idx] == '-' || s[idx] == '0'  || s[idx] == '+' || s[idx] == '#' || s[idx] == ' '))
 		{
 			if (s[idx] == '-')
 				print.flag[0] = 1;

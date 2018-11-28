@@ -13,7 +13,7 @@
 NAME = libftprintf.a
 CFLAGS = -c -Wall -Werror -Wextra
 HEADER = ft_printf.h
-CFILES = ./ft_printf.c ./ft_print.c ./ft_helpers.c ./ft_wchar.c ./ft_print_s.c ./ft_print_c.c ./ft_print_unsigned.c ./ft_print_signed.c
+CFILES = ./ft_printf.c ./ft_print.c ./ft_helpers.c ./ft_wchar.c ./ft_print_s.c ./ft_print_c.c ./ft_print_unsigned.c ./ft_print_signed.c ./ft_print_p.c
 OFILES	= $(CFILES:%.c=%.o)
 
 all: $(NAME)

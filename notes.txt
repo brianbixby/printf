@@ -315,3 +315,4 @@ void        ft_print_signed(char *s, int *lenptr, t_print *print)
       
     }
   }
+  moulitest : 79 has 2, 52 has 2, 74 has 1
