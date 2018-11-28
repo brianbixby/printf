@@ -307,10 +307,10 @@ long long   ft_int_modifier(va_list ap, t_print *print)
 		ret = (signed char)va_arg(ap, int);
 	else if (print->len == 2)
 		ret = (short)va_arg(ap, int);
-	else if (print->len == 3)
+	else if (print->len == 3 || print->len == 4)
 		ret = (long long)va_arg(ap, long long);
-	else if (print->len == 4)
-		ret = (long)va_arg(ap, long);
+	// else if (print->len == 4)
+	// 	ret = (long)va_arg(ap, long);
 	else if (print->len == 5)
 		ret = (long long)va_arg(ap, long long);
 	else if (print->len == 6)
