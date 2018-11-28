@@ -120,7 +120,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 	if (print->type == 's' || print->type == 'S')
 		ft_print_s(va_arg(ap, char *), lenptr, print);
 	else if (print->type == 'c' || print->type == '%' || print->type == 'C')
-		print->type == 'c' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
+		print->type == 'c' || print->type == 'C' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
 			(ft_print_s("%", lenptr, print));
 	else if (print->type == 'p')
 	{
