@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <locale.h>
 # include <stdio.h>
+# include <stdint.h>
 
 typedef struct		s_print
 {
@@ -51,6 +52,7 @@ void				ft_printstr(char *s, int *lenptr);
 int					ft_atoi(const char *str);
 int					ft_strlen(char *s);
 int					ft_strcmp(char *s1, char *s2);
+char				*ft_strdup(char *s1);
 
 // ft_wchar.c
 size_t  ft_wcharlen(wchar_t w);

@@ -13,9 +13,9 @@
 #include "ft_printf.h"
 #define BASE(c) ((c == 'x' || c == 'X') ? (16) : (8))
 #define ABS(i)  ((i < 0) ? (-i) : (i))
-#define FT_ULLMAX (~(0ULL))
-#define FT_LLMAX ((long long)(FT_ULLMAX / 2))
-#define FT_LLMIN (~FT_LLMAX)
+// #define FT_ULLMAX 18446744073709551615
+// #define FT_LLMAX 9223372036854775807
+// #define FT_LLMIN −9223372036854775808
 char	*ft_lltoa_base(long long value, int base, t_print *print)
 {
 	// printf("%s %lld \n", "lltoa val: ", value);
@@ -23,11 +23,9 @@ char	*ft_lltoa_base(long long value, int base, t_print *print)
 	char            *tab;
 	long long   	tmp;
 	char			*str;
-	char			*min;
 
 	size = 1;
 	tab = (print->type == 'X' ? ("0123456789ABCDEF") : ("0123456789abcdef"));
-	min = "9223372036854775808";
 	if (base < 2 || base > 16)
 		return (NULL);
 	tmp = value;
@@ -39,20 +37,22 @@ char	*ft_lltoa_base(long long value, int base, t_print *print)
 		print->prepend_val = "-";
 		print->prepend = 1;
 	}
+	if (value == INTMAX_MIN)
+	{
+		print->len_with_no_sign = 19;
+		size = -1;
+		return (ft_strdup("9223372036854775808"));
+	}
 	// tmp = (value < 0 ? (1) : (0));
 	// if (!(str = (char *)malloc(sizeof(char) * (size + tmp + 1))))
 	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
 	str[size] = '\0';
 	// while (size-- > tmp)
-	if (value == FT_LLMIN)
-	{
-		print->len_with_no_sign = 19;
-		size = -1;
-		while (++size < 19)
-			str[size] = min[size];
-		return (str);
-	}
+	// if (value == INTMAX_MAX)
+	// {
+	// 	return (ft_strdup());
+	// }
 	while (size-- > 0)
 	{
 		str[size] = tab[ABS(value % base)];
@@ -117,10 +117,10 @@ char	*ft_ulltoa_base(unsigned long long value, int base, t_print *print)
 
 void		ft_format(va_list ap, t_print *print, int *lenptr)
 {
-	if (print->type == 's' || print->type == 'S')
+	if (print->type == 's')
 		ft_print_s(va_arg(ap, char *), lenptr, print);
-	else if (print->type == 'c' || print->type == 'C' || print->type == '%')
-		print->type == 'c' || print->type == 'C' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
+	else if (print->type == 'c' || print->type == '%')
+		print->type == 'c' ? (ft_print_c(va_arg(ap, int), lenptr, print)) :
 			(ft_print_s("%", lenptr, print));
 	else if (print->type == 'p')
 	{
@@ -128,9 +128,9 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend = 2;
 		ft_print_p(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
 	}
-	else if (print->type == 'd' || print->type == 'D' || print->type == 'i')
+	else if (print->type == 'd' || print->type == 'i')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
-	else if (print->type == 'u' || print->type == 'U')
+	else if (print->type == 'u')
 	{
 		print->flag[2] = 0;
 		print->flag[4] = 0;
@@ -138,7 +138,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend_val = 0;
 		ft_print_unsigned(ft_ulltoa_base(ft_uint_modifier(ap, print), 10, print), lenptr, print);
 	}
-	else if (print->type == 'o' || print->type == 'O' || print->type == 'x' || print->type == 'X')
+	else if (print->type == 'o' || print->type == 'x' || print->type == 'X')
 	{
 		print->flag[2] = 0;
 		print->flag[4] = 0;
@@ -304,17 +304,17 @@ long long   ft_int_modifier(va_list ap, t_print *print)
 
 	ret = 0;
 	if (print->len == 1)
-		ret = (char)va_arg(ap, int);
+		ret = (signed char)va_arg(ap, int);
 	else if (print->len == 2)
 		ret = (short)va_arg(ap, int);
 	else if (print->len == 3)
-		ret = va_arg(ap, long long);
+		ret = (long long)va_arg(ap, long long);
 	else if (print->len == 4)
-		ret = va_arg(ap, long);
+		ret = (long)va_arg(ap, long);
 	else if (print->len == 5)
-		ret = va_arg(ap, long long);
+		ret = (long long)va_arg(ap, long long);
 	else if (print->len == 6)
-		ret = va_arg(ap, ssize_t);
+		ret = (ssize_t)va_arg(ap, ssize_t);
 	else
 		ret = va_arg(ap, int);
 	// printf("\n %s %lld \n", "int mod: ", ret);
@@ -331,13 +331,13 @@ unsigned long long   ft_uint_modifier(va_list ap, t_print *print)
 	else if (print->len == 2)
 		ret = (unsigned short)va_arg(ap, unsigned int);
 	else if (print->len == 3)
-		ret = va_arg(ap, unsigned long long);
+		ret = (unsigned long long)va_arg(ap, unsigned long long);
 	else if (print->len == 4)
-		ret = va_arg(ap, unsigned long);
+		ret = (unsigned long)va_arg(ap, unsigned long);
 	else if (print->len == 5)
-		ret = va_arg(ap, unsigned long long);
+		ret = (unsigned long long)va_arg(ap, unsigned long long);
 	else if (print->len == 6)
-		ret = va_arg(ap, size_t);
+		ret = (size_t)va_arg(ap, size_t);
 	else
 		ret = va_arg(ap, unsigned int);
 	// printf("\n %s %lu \n", "uint mod: ", ret2);

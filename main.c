@@ -36,9 +36,9 @@ int     main(void)
     // #define FT_LLMAX (FT_ULLMAX / 2)
     // #define FT_LLMIN (~FT_LLMAX)
     int x, y;
-    x = printf("%2.9p\n", 1234);
+    x = printf("%ld\n", 4294959296);
     printf("\n");
-    y = ft_printf("%2.9p\n", 1234);
+    y = ft_printf("%ld\n", 4294959296);
     // printf("%#.o, %#.0o", 0, 0);
     // printf("%#.o, %#.0o", 0, 0);
     // x = printf("%#.x, %#.0x\n", 0, 0);
