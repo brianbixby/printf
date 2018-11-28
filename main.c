@@ -35,8 +35,11 @@ int     main(void)
     // #define FT_ULLMAX (~(0ULL))
     // #define FT_LLMAX (FT_ULLMAX / 2)
     // #define FT_LLMIN (~FT_LLMAX)
-    printf("@moulitest: %#.x %#.0x", 0, 0);
-    ft_printf("@moulitest: %#.x %#.0x", 0, 0);
+    // printf("@moulitest: %#.x %#.0x", 0, 0);
+    // ft_printf("@moulitest: %#.x %#.0x", 0, 0);
+
+    printf("%C\n", L'猫');
+    ft_printf("%C\n", L'猫');
     
 
     //  printf(" %0 5d%s \n", 123, "hi");

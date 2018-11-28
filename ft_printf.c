@@ -139,9 +139,9 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		ft_print_signed(ft_ulltoa_base(ft_uint_modifier(ap, print),  BASE(print->type), print), lenptr, print);
 	}
 	else if (print->type == 'C')
-		ft_print_s(va_arg(ap, wchar_t), lenptr, print);
+		ft_print_s(ft_convertwchar(va_arg(ap, wchar_t)), lenptr, print);
 	else if (print->type == 'S')
-		ft_print_s(va_arg(ap, wchar_t *), lenptr, print);
+		ft_print_s(ft_convertwstr(va_arg(ap, wchar_t *)), lenptr, print);
 }
 
 int         ft_printf(const char *s, ...)
