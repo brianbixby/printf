@@ -178,6 +178,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 	{
 		print->prec = (print->prec == -1 ? 7 : print->prec + 1);
 		ft_print_f(ft_ldtoa(ft_f_modifier(ap, print), print), lenptr, print);
+		// pr_putfloat((long double)va_arg(ap, double), print->prec, 0);
 	}
 	else
 		ft_print_c((int)print->type, lenptr, print);
@@ -386,6 +387,7 @@ unsigned long long   ft_uint_modifier(va_list ap, t_print *print)
 long double		ft_f_modifier(va_list ap, t_print *print)
 {
 	long double		ret;
+	// char			*s;
 
 	ret = 0;
 	if (print->len == 4)
@@ -393,6 +395,42 @@ long double		ft_f_modifier(va_list ap, t_print *print)
 	else if (print->len == 7)
 		ret = (long double)va_arg(ap, long double);
 	else
+		// s = va_arg(ap, char *);
 		ret = (long double)va_arg(ap, double);
 	return (ret);
 }
+
+// void				pr_putfloat(long double float_i, int prec,
+// 					int overflow_protection)
+// {
+// 	int					cnt;
+// 	unsigned long long	hold;
+// 	int					prec_dup;
+
+// 	prec_dup = prec;
+// 	overflow_protection = (prec > 18) ? (prec - 18) : (0);
+// 	(prec > 18) ? (prec = 18) : (0);
+// 	cnt = 0;
+// 	// if (prec_zero(hold = 0, float_i, prec) == -1)
+// 	// 	return ;
+// 	while (prec_dup--)
+// 		float_i *= 10;
+// 	hold = float_i;
+// 	float_i /= 10;
+// 	(hold % 10 >= 5) ? (float_i += 1) : (0);
+// 	prec_dup = prec - 1;
+// 	while (prec_dup--)
+// 		float_i /= 10;
+// 	ft_base_unsigned_all((uintmax_t)float_i, "0123456789");
+// 	pr_putchar('.');
+// 	float_i = float_i - (uintmax_t)float_i;
+// 	hold = float_i * power_base_ten(prec - 1);
+// 	while ((float_i < 1 || (uintmax_t)float_i % 10 != 0) && ++cnt < prec)
+// 	{
+// 		float_i *= 10;
+// 		if ((int)float_i == 0)
+// 			pr_putchar('0');
+// 	}
+// 	ft_base_unsigned_all(hold, "0123456789");
+// 	(overflow_protection != 0) ? (print_loop(overflow_protection, '0')) : (0);
+// }

@@ -40,7 +40,7 @@ void        ft_print_f(char *s, int *lenptr, t_print *print)
     *lenptr += (print->len_with_no_sign + print->neg -1);
 }
 
-long    powk(int x, unsigned int y)
+long long   powk(int x, unsigned int y)
 {
     if( y == 0)
         return 1;
@@ -54,11 +54,11 @@ long    powk(int x, unsigned int y)
 char    *ft_ldtoa(long double ld, t_print *print)
 {
     long    long_ld;
-    long    mut_ab;
-    long    after_point_ld;
-    long    multiplier;
+    long long    mut_ab;
+    unsigned long long    after_point_ld;
+    long long    multiplier;
     long    xy;
-    long    muted;
+    long long    muted;
     char    *str;
     char    *temp;
     int     i;
@@ -78,7 +78,7 @@ char    *ft_ldtoa(long double ld, t_print *print)
     if (print->prec)
         str[i] = '.';
 	mut_ab = powk(10, print->prec);
-    after_point_ld = (long) (ld * mut_ab);
+    after_point_ld = (unsigned long long) ABS(ld * mut_ab);
     multiplier = powk(10,(print->prec - 1));
     xy = 0;
     while (xy++ < print->prec)
