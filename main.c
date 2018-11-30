@@ -36,8 +36,8 @@ int     main(void)
     // #define FT_LLMAX (FT_ULLMAX / 2)
     // #define FT_LLMIN (~FT_LLMAX)
     int x, y;
-    x = printf("%f\n", (float)99.9999999);
-    y = ft_printf("%f\n", (float)99.9999999);
+    x = printf("{%f}{%F}\n", 1444565444646.6465424242242, 1444565444646.6465424242242);
+    y = ft_printf("{%f}{%F}\n", 1444565444646.6465424242242, 1444565444646.6465424242242);
     // printf("%#.o, %#.0o", 0, 0);
     // printf("%#.o, %#.0o", 0, 0);
     // x = printf("%#.x, %#.0x\n", 0, 0);

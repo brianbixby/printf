@@ -25,7 +25,7 @@ void        ft_print_f(char *s, int *lenptr, t_print *print)
         while (i >= 0 && r)
         {
             if (s[i] == '9')
-                s[i] = 0;
+                s[i] = '0';
             else if (s[i] != '.')
             {
                 s[i] += 1;
@@ -84,7 +84,7 @@ char    *ft_ldtoa(long double ld, t_print *print)
     while (xy++ < print->prec)
     {
         muted = (after_point_ld/multiplier);
-        muted = muted % 10;
+        muted = ABS(muted % 10);
         str[++i] = (char)muted + 48;
         multiplier/=10;
     }

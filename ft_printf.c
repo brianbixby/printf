@@ -174,7 +174,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend_val = 0;
 		ft_print_signed(ft_ulltoa_base(ft_uint_modifier(ap, print),  BASE(print->type), print), lenptr, print);
 	}
-	else if (print->type == 'f')
+	else if (print->type == 'f' || print->type == 'F')
 	{
 		print->prec = (print->prec == -1 ? 7 : print->prec + 1);
 		ft_print_f(ft_ldtoa(ft_f_modifier(ap, print), print), lenptr, print);
@@ -393,6 +393,6 @@ long double		ft_f_modifier(va_list ap, t_print *print)
 	else if (print->len == 7)
 		ret = (long double)va_arg(ap, long double);
 	else
-		ret = (float)va_arg(ap, double);
+		ret = (long double)va_arg(ap, double);
 	return (ret);
 }
