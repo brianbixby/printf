@@ -154,7 +154,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend = 2;
 		ft_print_p(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
 	}
-	else if (print->type == 'd' || print->type == 'D' || print->type == 'i')
+	else if (print->type == 'd' || print->type == 'i')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
 	else if (print->type == 'D')
 		ft_print_signed(ft_lltoa_base((long)va_arg(ap, long), 10, print), lenptr, print);
