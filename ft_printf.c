@@ -115,6 +115,32 @@ char	*ft_ulltoa_base(unsigned long long value, int base, t_print *print)
 	return (str);
 }
 
+// char	*ft_ldtoa(long double value, t_print *print)
+// {
+// 	int     size;
+// 	char            *tab;
+// 	long double   	tmp;
+// 	char			*str;
+
+// 		size = 1;
+// 	tab = (print->type == 'X' ? ("0123456789ABCDEF") : ("0123456789abcdef"));
+// 	tmp = value;
+// 	while (tmp /= 10)
+// 		size++;
+// 	if (!(str = (char *)malloc(sizeof(char) * (size + tmp + 1))))
+// 		return (NULL);
+// 	str[size] = '\0';
+// 	while (size-- > tmp)
+// 	{
+// 		str[size] = tab[ABS(value % 10)];
+// 		value /= 10;
+// 	}
+// 	if (tmp)
+// 		str[0] = '-';
+// 	print->len_with_no_sign = ft_strlen(str);
+// 	return (str);
+// }
+
 void		ft_format(va_list ap, t_print *print, int *lenptr)
 {
 	if (print->type == 's' || print->type == 'S')
@@ -128,7 +154,7 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend = 2;
 		ft_print_p(ft_lltoa_base((long long)va_arg(ap, void *), 16, print), lenptr, print);
 	}
-	else if (print->type == 'd' || print->type == 'i')
+	else if (print->type == 'd' || print->type == 'D' || print->type == 'i')
 		ft_print_signed(ft_lltoa_base(ft_int_modifier(ap, print), 10, print), lenptr, print);
 	else if (print->type == 'D')
 		ft_print_signed(ft_lltoa_base((long)va_arg(ap, long), 10, print), lenptr, print);
@@ -148,7 +174,11 @@ void		ft_format(va_list ap, t_print *print, int *lenptr)
 		print->prepend_val = 0;
 		ft_print_signed(ft_ulltoa_base(ft_uint_modifier(ap, print),  BASE(print->type), print), lenptr, print);
 	}
-	// else if (print->type == 'f')
+	else if (print->type == 'f')
+	{
+		print->prec = (print->prec == -1 ? 7 : print->prec + 1);
+		ft_print_f(ft_ldtoa(ft_f_modifier(ap, print), print), lenptr, print);
+	}
 	else
 		ft_print_c((int)print->type, lenptr, print);
 }
@@ -289,6 +319,11 @@ const char		*ft_setflags(const char *s, va_list ap, int *lenptr)
 			print.len = 6;
 			idx++;
 		}
+		else if (s[idx] == 'L')
+		{
+			print.len = 7;
+			idx++;
+		}
 		print.type = s[idx];
 		// printf("%s %d%d%d%d%d %s %d %s %d %s %d %s %c \n", "flag[0]-[4]: ", print.flag[0],print.flag[1],print.flag[2],print.flag[3],print.flag[4], "minw: ", print.minw, "prec: ", print.prec, "len: ", print.len, "type: ", print.type);
 		ft_format(ap, &print, lenptr);
@@ -317,6 +352,8 @@ long long   ft_int_modifier(va_list ap, t_print *print)
 		ret = (long long)va_arg(ap, long long);
 	else if (print->len == 6)
 		ret = (ssize_t)va_arg(ap, ssize_t);
+	else if (print->len == 7)
+		ret = (long double)va_arg(ap, long double);
 	else
 		ret = va_arg(ap, int);
 	// printf("\n %s %lld \n", "int mod: ", ret);
@@ -343,5 +380,19 @@ unsigned long long   ft_uint_modifier(va_list ap, t_print *print)
 	else
 		ret = va_arg(ap, unsigned int);
 	// printf("\n %s %lu \n", "uint mod: ", ret2);
+	return (ret);
+}
+
+long double		ft_f_modifier(va_list ap, t_print *print)
+{
+	long double		ret;
+
+	ret = 0;
+	if (print->len == 4)
+		ret = (double)va_arg(ap, double);
+	else if (print->len == 7)
+		ret = (long double)va_arg(ap, long double);
+	else
+		ret = (float)va_arg(ap, double);
 	return (ret);
 }

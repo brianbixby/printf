@@ -38,6 +38,8 @@ void				ft_format(va_list ap, t_print *print, int *lenptr);
 int					ft_printf(const char *s, ...);
 long long   ft_int_modifier(va_list ap, t_print *print);
 unsigned long long   ft_uint_modifier(va_list ap, t_print *print);
+long double		ft_f_modifier(va_list ap, t_print *print);
+// char	*ft_ldtoa(long double value, t_print *print);
 
 const char	*ft_setflags(const char *s, va_list ap, int *lenptr);
 void				ft_initializeprintstruct(t_print *print);
@@ -74,5 +76,13 @@ void        ft_print_signed(char *s, int *lenptr, t_print *print);
 
 // ft_print_p.c
 void        ft_print_p(char *s, int *lenptr, t_print *print);
+
+// ft_print_f.c
+// void        ft_print_f(char *s, int *lenptr, t_print *print);
+char    *ft_lltoa(long long value);
+void    ft_numlen(long long_ld, t_print *print);
+char    *ft_ldtoa(long double ld, t_print *print);
+long    powk(int x, unsigned int y);
+void        ft_print_f(char *s, int *lenptr, t_print *print);
 
 #endif
