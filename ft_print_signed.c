@@ -23,7 +23,8 @@ static void		ft_leftalign(t_print *print, char *ptr, char *s, int size)
 		ptr[++pidx] = '-';
 	else if (print->flag[2] || print->flag[4])
 		ptr[++pidx] = (print->flag[2] ? '+' : ' ');
-	if (print->type == 'x' || print->type == 'X' || print->type == 'o')
+	if (print->type == 'x' || print->type == 'X' || print->type == 'o'
+		|| print->type == 'O')
 		while (print->prepend--)
 			ptr[++pidx] = *(print->prepend_val++);
 	while (--print->prec - print->len_with_no_sign >= 0)
@@ -83,12 +84,21 @@ static void		ft_rightalign(t_print *print, char *ptr, char *s, int size)
 		ft_rightalign2(print, ptr, s, size);
 }
 
+static void		ft_print_signed_helper(t_print *print)
+{
+	(print->prec == 0 && print->type == 'x') && (print->len_with_no_sign = 0);
+	if ((print->type == 'o' || print->type == 'O') && print->prec >
+		print->len_with_no_sign + print->prepend && print->prec > print->minw)
+		print->prec -= print->prepend;
+}
+
 void			ft_print_signed(char *s, int *lenptr, t_print *print)
 {
 	int			size;
 	char		*ptr;
 	int			idx;
 
+	ft_print_signed_helper(print);
 	size = (print->len_with_no_sign + print->prepend > print->minw ?
 		print->len_with_no_sign + print->prepend : print->minw);
 	if (print->prec + print->prepend > size)
@@ -108,5 +118,5 @@ void			ft_print_signed(char *s, int *lenptr, t_print *print)
 		ft_leftalign(print, ptr, s, size);
 	else
 		ft_rightalign(print, ptr, s, size);
-	ft_write(ptr, lenptr, size);
+	ft_write(ptr, lenptr, size, s);
 }

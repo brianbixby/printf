@@ -129,7 +129,7 @@ void				ft_print_f(char *s, int *lenptr, t_print *print);
 /*
 **	ft_print_helpers.c
 */
-int					ft_write(char *str, int *lenptr, int size);
+int					ft_write(char *str, int *lenptr, int size, char *s);
 int					ft_null(int *lenptr);
 void				ft_putchar(char c);
 

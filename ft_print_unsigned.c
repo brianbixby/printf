@@ -73,5 +73,5 @@ void			ft_print_unsigned(char *s, int *lenptr, t_print *print)
 		ft_leftalign(s, str, charstoprint, size);
 	else
 		ft_rightalign(s, str, charstoprint, print);
-	ft_write(str, lenptr, size);
+	ft_write(str, lenptr, size, s);
 }

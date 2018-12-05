@@ -12,10 +12,12 @@
 
 #include "ft_printf.h"
 #include "stdio.h"
+#include <limits.h>
 
 int		main(void)
 {
-	printf("{%30S}", L"我是一只猫。");
-	ft_printf("{%30S}", L"我是一只猫。");
+	setlocale(LC_ALL, "en_US.UTF-8");
+	printf("%#.3o\n", 1);
+	ft_printf("%#.3o\n", 1);
 	return (0);
 }

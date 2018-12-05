@@ -12,11 +12,13 @@
 
 #include "ft_printf.h"
 
-int			ft_write(char *str, int *lenptr, int size)
+int			ft_write(char *str, int *lenptr, int size, char *s)
 {
 	write(1, str, size);
 	*lenptr += size;
 	free(str);
+	if (s)
+		free(s);
 	return (0);
 }
 

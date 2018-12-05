@@ -35,5 +35,5 @@ void		ft_print_c(char c, int *lenptr, t_print *print)
 			ptr[idx++] = (print->flag[1] ? '0' : ' ');
 		ptr[idx] = c;
 	}
-	ft_write(ptr, lenptr, size);
+	ft_write(ptr, lenptr, size, NULL);
 }

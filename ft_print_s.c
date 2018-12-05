@@ -57,5 +57,5 @@ int				ft_print_s(char *s, int *lenptr, t_print *print)
 		return (0);
 	ptr[sl[0]] = '\0';
 	ft_createstring(s, print, ptr, sl);
-	return (ft_write(ptr, lenptr, sl[0]));
+	return (ft_write(ptr, lenptr, sl[0], NULL));
 }

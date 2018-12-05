@@ -46,7 +46,9 @@ unsigned long long			ft_uint_modifier(va_list ap, t_print *print)
 	unsigned long long		ret;
 
 	ret = 0;
-	if (print->len == 1)
+	if (print->type == 'O' || print->type == 'U')
+		ret = va_arg(ap, unsigned long);
+	else if (print->len == 1)
 		ret = (unsigned char)va_arg(ap, unsigned int);
 	else if (print->len == 2)
 		ret = (print->type == 'U' ? va_arg(ap, unsigned long) :

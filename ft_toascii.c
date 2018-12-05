@@ -58,7 +58,7 @@ char						*ft_lltoa_base(long long value, int base,
 
 static void					ft_setprependval(t_print *print)
 {
-	if (print->type == 'o')
+	if (print->type == 'o' || print->type == 'O')
 	{
 		print->prepend_val = "0";
 		print->prepend = 1;
@@ -87,7 +87,7 @@ char						*ft_ulltoa_base(unsigned long long value, int base,
 		return (NULL);
 	str[size] = '\0';
 	if (print->flag[3] && (print->type == 'o' || print->type == 'x' ||
-		print->type == 'X') && value != 0)
+		print->type == 'X' || print->type == 'O') && value != 0)
 		ft_setprependval(print);
 	while (size-- > tmp)
 	{
