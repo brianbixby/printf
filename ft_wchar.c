@@ -34,23 +34,20 @@
 **
 **	We continue in a similar manner but use the appropriate mask for the first
 **	byte (i.e. 0, 0xC0, 0xE0, 0xF0).
-** reference: https://github.com/nmei-42/42-printf/blob/master/printf_utf_utils.c
+** ref: https://github.com/nmei-42/42-printf/blob/master/printf_utf_utils.c
 */
 
-size_t  ft_wcharlen(wchar_t w)
+size_t	ft_wlen(wchar_t w)
 {
-    size_t	len;
-
-	len = 0;
 	if (w < 0x007F)
-        len++;
-    else if (w < 0x07FF)
-        return (2);
-    else if (w < 0xFFFF)
-        return (3);
-    else if (w < 0x10FFFF)
-        return (4);
-    return (0);
+		return (1);
+	else if (w < 0x07FF)
+		return (2);
+	else if (w < 0xFFFF)
+		return (3);
+	else if (w < 0x10FFFF)
+		return (4);
+	return (0);
 }
 
 size_t	ft_wstrlen(wchar_t *s)
@@ -60,80 +57,60 @@ size_t	ft_wstrlen(wchar_t *s)
 	len = 0;
 	while (*s != L'\0')
 	{
-		len += ft_wcharlen(*s);
+		len += ft_wlen(*s);
 		s++;
 	}
 	return (len);
 }
 
-char    *ft_convertwchar(wchar_t wc)
+void	ft_putwchar(wchar_t wc)
 {
-	size_t  len;
-	size_t	idx;
-	char	*str;
-
-	len = ft_wcharlen(wc);
-	idx = 0;
-	if (!(str = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	str[len] = '\0';
 	if (wc <= 0x007F)
-		str[idx] = wc;
+		ft_putchar(wc);
 	else if (wc <= 0x07FF)
 	{
-		str[idx] = (wc >> 6) | 0xC0;
-		str[++idx] = (wc & 0x3F) | 0x80;
+		ft_putchar((wc >> 6) | 0xC0);
+		ft_putchar((wc & 0x3F) | 0x80);
 	}
 	else if (wc <= 0xFFFF)
 	{
-		str[idx] = (wc >> 12) | 0xE0;
-		str[++idx] = ((wc >> 6) & 0x3F) | 0x80;
-		str[++idx] = (wc & 0x3F) | 0x80;
+		ft_putchar((wc >> 12) | 0xE0);
+		ft_putchar(((wc >> 6) & 0x3F) | 0x80);
+		ft_putchar((wc & 0x3F) | 0x80);
 	}
 	else if (wc <= 0x10FFFF)
 	{
-		str[idx] = (wc >> 18) | 0xF0;
-		str[++idx] = ((wc >> 12) & 0x3F) | 0x80;
-		str[++idx] = ((wc >> 6) & 0x3F) | 0x80;
-		str[++idx] = (wc & 0x3F) | 0x80;
+		ft_putchar((wc >> 18) | 0xF0);
+		ft_putchar(((wc >> 12) & 0x3F) | 0x80);
+		ft_putchar(((wc >> 6) & 0x3F) | 0x80);
+		ft_putchar((wc & 0x3F) | 0x80);
 	}
-	return (str);
 }
 
-char    *ft_convertwstr(wchar_t *wstr)
+int		ft_putwstr(va_list ap, int *lenptr)
 {
-	size_t	len;
-	size_t	idx;
-	char	*str;
+	wchar_t *wstr;
+	size_t	wlen;
+	size_t	i;
 
-	len = ft_wstrlen(wstr);
-	idx = -1;
-	if (!(str = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	str[len] = '\0';
-	while (++idx < len)
+	wstr = va_arg(ap, wchar_t *);
+	if (!wstr)
+		return (ft_null(lenptr));
+	wlen = ft_wstrlen(wstr);
+	i = 0;
+	while (*wstr && i < wlen)
 	{
-		if (*wstr <= 0x007F)
-			str[idx] = *wstr;
-		else if (*wstr <= 0x07FF)
-		{
-			str[idx] = (*wstr >> 6) | 0xC0;
-			str[++idx] = (*wstr & 0x3F) | 0x80;
-		}
+		if (*wstr <= 0x7F)
+			i++;
+		else if (*wstr <= 0x7FF)
+			i += 2;
 		else if (*wstr <= 0xFFFF)
-		{
-			str[idx] = (*wstr >> 12) | 0xE0;
-			str[++idx] = ((*wstr >> 6) & 0x3F) | 0x80;
-			str[++idx] = (*wstr & 0x3F) | 0x80;
-		}
+			i += 3;
 		else if (*wstr <= 0x10FFFF)
-		{
-			str[idx] = (*wstr >> 18) | 0xF0;
-			str[++idx] = ((*wstr >> 12) & 0x3F) | 0x80;
-			str[++idx] = ((*wstr >> 6) & 0x3F) | 0x80;
-			str[++idx] = (*wstr & 0x3F) | 0x80;
-		}
-		wstr++;
+			i += 4;
+		if (i <= wlen)
+			ft_putwchar(*wstr++);
 	}
-	return (str);
+	*lenptr += (int)i;
+	return (0);
 }

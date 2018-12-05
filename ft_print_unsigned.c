@@ -12,53 +12,66 @@
 
 #include "ft_printf.h"
 
-void        ft_print_unsigned(char *s, int *lenptr, t_print *print)
+static void		ft_leftalign(char *s, char *str, int charstoprint, int size)
 {
-	int     i;
-	int     charstoprint;
-	int     size;
-	char    *str;
-	int		j;
+	int		i;
 
+	i = -1;
+	while (++i < charstoprint)
+		str[i] = s[i];
+	while (i < size)
+	{
+		str[i] = ' ';
+		i++;
+	}
+}
+
+static void		ft_rightalign(char *s, char *str, int charstoprint,
+					t_print *print)
+{
+	int		i;
+	int		j;
+	int		size;
+
+	i = -1;
 	j = 0;
+	size = (print->minw > charstoprint ? print->minw : charstoprint);
+	while (++i < size - charstoprint)
+		str[i] = (print->flag[1] ? '0' : ' ');
+	while (i + print->len_with_no_sign < size)
+		str[i++] = '0';
+	while (i < size)
+	{
+		str[i] = s[j];
+		i++;
+		j++;
+	}
+}
+
+void			ft_print_unsigned(char *s, int *lenptr, t_print *print)
+{
+	int		i;
+	int		charstoprint;
+	int		size;
+	char	*str;
+
 	i = ft_strlen(s);
 	charstoprint = (print->prec == -1 || i > print->prec ? i : print->prec);
 	size = (print->minw > charstoprint ? print->minw : charstoprint);
-	if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
+	if (!print->flag[3] && print->prec == 0 && !print->flag[1] &&
+		ft_strcmp(s, "0") == 0)
 		size = print->minw;
 	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
 		return ;
 	str[size] = '\0';
 	i = -1;
-	if ((print->type == 'o' || print->type == 'x' || print->type == 'X' || print->type == 'd' || print->type == 'i' || print->type == 'u' || print->type == 'p') && !print->flag[3] && print->prec == 0 && !print->flag[1] && ft_strcmp(s, "0") == 0)
-	{
+	if (!print->flag[3] && print->prec == 0 && !print->flag[1] &&
+		ft_strcmp(s, "0") == 0)
 		while (++i < size)
-      		str[i] = ' ';
-	}
-	else if (print->flag[0])
-	{
-		while (++i < charstoprint)
-			str[i] = s[i];
-		while (i < size)
-		{
 			str[i] = ' ';
-			i++;
-		}
-	}
+	else if (print->flag[0])
+		ft_leftalign(s, str, charstoprint, size);
 	else
-	{
-		while (++i < size - charstoprint)
-			str[i] = (print->flag[1] ? '0' : ' ');
-		while (i + print->len_with_no_sign < size)
-        	str[i++] = '0';
-		while (i < size)
-		{
-			str[i] = s[j];
-			i++;
-			j++;
-		}
-	}
-	write(1, str, size);
-	*lenptr += size;
-	free(str);
+		ft_rightalign(s, str, charstoprint, print);
+	ft_write(str, lenptr, size);
 }

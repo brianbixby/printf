@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#define ABS(i)  ((i < 0) ? (-i) : (i))
 
-int		ft_atoi(const char *str)
+int			ft_atoi(const char *str)
 {
 	int	ret;
 	int	sign;
@@ -35,7 +36,7 @@ int		ft_atoi(const char *str)
 	return (ret * sign);
 }
 
-int		ft_strlen(char *s)
+int			ft_strlen(char *s)
 {
 	int	i;
 
@@ -45,7 +46,7 @@ int		ft_strlen(char *s)
 	return (i);
 }
 
-int		ft_strcmp(char *s1, char *s2)
+int			ft_strcmp(char *s1, char *s2)
 {
 	int	i;
 
@@ -75,4 +76,31 @@ char		*ft_strdup(char *s1)
 	}
 	ptr[i] = '\0';
 	return (ptr);
+}
+
+char		*ft_lltoa(long long value)
+{
+	int					flag;
+	int					size;
+	char				*tab;
+	long long			tmp;
+	char				*str;
+
+	flag = (value < 0 ? 1 : 0);
+	size = 1 + flag;
+	tab = "0123456789abcdef";
+	tmp = value;
+	while (tmp /= 10)
+		size++;
+	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
+		return (NULL);
+	str[size] = '\0';
+	while (size-- > flag)
+	{
+		str[size] = tab[ABS(value % 10)];
+		value /= 10;
+	}
+	if (flag)
+		str[0] = '-';
+	return (str);
 }

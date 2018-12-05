@@ -1,44 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print.c                                         :+:      :+:    :+:   */
+/*   ft_print_helpers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbixby <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/10 07:54:25 by bbixby            #+#    #+#             */
-/*   Updated: 2018/11/10 07:54:28 by bbixby           ###   ########.fr       */
+/*   Created: 2018/12/03 16:49:08 by bbixby            #+#    #+#             */
+/*   Updated: 2018/12/03 16:49:10 by bbixby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void		ft_printsinglechar(int i, int *lenptr)
+int			ft_write(char *str, int *lenptr, int size)
 {
-	char	c;
-
-	c = (char)i;
-	write(1, &c, 1);
-	*lenptr += 1;
+	write(1, str, size);
+	*lenptr += size;
+	free(str);
+	return (0);
 }
 
-void		ft_printchar(int i, int *lenptr, t_print *print)
+int			ft_null(int *lenptr)
 {
-	char	c;
-	t_print	myprint;
-
-	myprint = *print;
-	c = (char)i;
-	write(1, &c, 1);
-	*lenptr += 1;
+	write(1, "(null)", 6);
+	*lenptr += 6;
+	return (0);
 }
 
-void		ft_printstr(char *s, int *lenptr)
+void		ft_putchar(char c)
 {
-	int		i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	write(1, s, i);
-	*lenptr += i;
+	write(1, &c, 1);
 }

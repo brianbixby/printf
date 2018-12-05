@@ -12,102 +12,50 @@
 
 #include "ft_printf.h"
 
-void        ft_print_s(char *s, int *lenptr, t_print *print)
+static void		ft_createstring(char *s, t_print *print, char *ptr, int sl[2])
 {
-    int     len;
-    int     size;
-    char    *ptr;
-    int     idx;
+	int			idx;
 
-    if (!s && print->minw == 0)
+	idx = -1;
+	if (!s)
 	{
-		write(1, "(null)", 6);
-		*lenptr += 6;
-		return ;
+		while (++idx < sl[0])
+			ptr[idx] = (print->flag[1] ? '0' : ' ');
 	}
-    
-
-    len = (!s ? 0 : ft_strlen(s));
-    len = (print->prec == -1 || print->type == '%' || len < print->prec ? len : print->prec);
-    // len = ((print->prec != -1 || print->type != '%') && print->prec < ft_strlen(s) ? print->prec : ft_strlen(s));
-    size = (len > print->minw ? len : print->minw);
-    if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
-        return ;
-    ptr[size] = '\0';
-    idx = -1;
-    if (!s)
-    {
-        while (++idx < size)
-            ptr[idx] = (print->flag[1] ? '0' : ' ');
-    }
-    else if (print->flag[0])
-    {
-        while (++idx < len && s[idx])
-            ptr[idx] = s[idx];
-        while (idx < size)
-            ptr[idx++] = ' ';
-    }
-    else
-    {
-        while (++idx < size - len)
-            ptr[idx] = (print->flag[1] ? '0' : ' ');
-        while (*s && idx < size)
-            ptr[idx++] = *s++;
-    }
-    write(1, ptr, size);
-	*lenptr += size;
-    free(ptr);
-	// if (print->type == 'p')
-	// 	free(s);
+	else if (print->flag[0])
+	{
+		while (++idx < sl[1] && s[idx])
+			ptr[idx] = s[idx];
+		while (idx < sl[0])
+			ptr[idx++] = ' ';
+	}
+	else
+	{
+		while (++idx < sl[0] - sl[1])
+			ptr[idx] = (print->flag[1] ? '0' : ' ');
+		while (*s && idx < sl[0])
+			ptr[idx++] = *s++;
+	}
 }
 
-// void        ft_print_s(char *s, int *lenptr, t_print *print)
-// {
-	
-// 	// printf("%s %d %d %d %d %d \n", "flag: ", print->flag[0], print->flag[1], print->flag[2], print->flag[3], print->flag[4]);
-// 	// printf("%s %d \n %s %d \n %s %d \n %s %c \n", "minw: ", print->minw, "prec: ", print->prec, "len: ", print->len, "type: ", print->type);
-// 	int     i;
-// 	int		j;
-// 	int     charstoprint;
-// 	int     size;
-// 	char    *str;
-	
-// 	if (!s)
-// 	{
-// 		write(1, "(null)", 6);
-// 		*lenptr += 6;
-// 		return ;
-// 	}
-// 	i = ft_strlen(s);
-// 	j = 0;
-// 	charstoprint = (print->prec == -1 || print->prec > i ? i : print->prec);
-// 	size = (print->minw > charstoprint ? print->minw : charstoprint);
-// 	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
-// 		return ;
-// 	str[size] = '\0';
-// 	i = -1;
-// 	if (print->flag[0])
-// 	{
-// 		while (++i < charstoprint)
-// 			str[i] = s[i];
-// 		while (i < size)
-// 		{
-// 			str[i] = ' ';
-// 			i++;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		while (++i < size - charstoprint)
-// 			str[i] = ' ';
-// 		while (i < size)
-// 		{
-// 			str[i] = s[j];
-// 			i++;
-// 			j++;
-// 		}
-// 	}
-// 	write(1, str, size);
-// 	*lenptr += size;
-// 	free(str);
-// }
+/*
+**	sl[2] = size_len, sl[0] = size, sl[1] = len
+*/
+
+int				ft_print_s(char *s, int *lenptr, t_print *print)
+{
+	int			sl[2];
+	char		*ptr;
+
+	if (!s && print->minw == 0)
+		return (ft_null(lenptr));
+	sl[1] = (!s ? 0 : ft_strlen(s));
+	sl[1] = (print->prec == -1 || print->type == '%' || sl[1] < print->prec ?
+			sl[1] : print->prec);
+	sl[0] = (sl[1] > print->minw ? sl[1] : print->minw);
+	if (!(ptr = (char *)malloc(sizeof(char) * (sl[0] + 1))))
+		return (0);
+	ptr[sl[0]] = '\0';
+	ft_createstring(s, print, ptr, sl);
+	return (ft_write(ptr, lenptr, sl[0]));
+}
